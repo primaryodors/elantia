@@ -89,7 +89,7 @@ Connection* Neuron::attach_input(Neuron* n)
             inputs = temp;
         }
         inputs[i].output_from = n;
-        inputs[i].multiplier = 1;
+        inputs[i].multiplier = frand(-1, 1);
         inputs[i].input_to = this;
     }
 }
