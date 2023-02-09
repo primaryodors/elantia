@@ -17,11 +17,17 @@ class Neuron
     float lambda = 1;           // "
     float rate = 0;
 
+    float dalpha = 0;
+    float dlambda = 0;
+
     public:
     Neuron (ActivationFunction acv_function);
     float compute_firing_rate();
     float compute_rate_direct(float input);
     Connection* attach_input(Neuron* n);
+
+    void tweak_something();
+    void put_it_back();
 };
 
 struct Connection
@@ -29,10 +35,8 @@ struct Connection
     Neuron* output_from = nullptr;
     Neuron* input_to = nullptr;
     float multiplier = 0;
+    float dmult = frand(-0.5, 0.5);
 };
-
-
-
 
 #endif
 

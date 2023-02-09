@@ -66,7 +66,30 @@ void NeuralNetwork::train(float* iv, int coi)
         {
             Neuron* n = inner_layers[l]->get_neuron(m);
 
-            // TODO:
+            n->tweak_something();
+
+            for (i=0; i<ic; i++)
+            {
+                float f = outputs->get_neuron(i)->compute_firing_rate();
+                outvals[i] = f;
+            }
+
+            float new_goodness = outvals[coi];
+
+            for (i=0; i<ic; i++)
+            {
+                if (i == coi) continue;
+                new_goodness -= outvals[i];
+            }
+
+            if (new_goodness >= goodness)
+            {
+                goodness = new_goodness;
+            }
+            else
+            {
+                n->put_it_back();
+            }
         }
     }
 }
