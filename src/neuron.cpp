@@ -1,10 +1,10 @@
 
 #include "neuron.h"
 
-Neuron::Neuron (NeuralType nt)
+Neuron::Neuron (ActivationFunction af)
 {
-    type = nt;
-    switch (nt)
+    acv_fn = af;
+    switch (af)
     {
         case Sigmoid:
         activation_function = acfn_sigmoid;
@@ -64,12 +64,32 @@ float Neuron::compute_firing_rate()
     int i;
     for (i=0; inputs[i]; i++)
         x += inputs[i]->output_from->rate;
+    
+    return compute_rate_direct(x);
+}
 
+float Neuron::compute_rate_direct(float x)
+{
     rate = activation_function(x, alpha, lambda);
     return rate;
 }
 
 Connection* Neuron::attach_input(Neuron* n)
 {
-    // TODO:
+    int i, j;
+    if (!inputs) inputs = new Connection[10];
+    else
+    {
+        for (i=0; inputs[i].input_to == this; i++);         // Get count.
+        if (!(i%10))
+        {
+            Connection* temp = new Connection[i+10];
+            for (j=0; j<i; j++) temp[j] = inputs[j];
+            delete[] inputs;
+            inputs = temp;
+        }
+        inputs[i].output_from = n;
+        inputs[i].multiplier = 1;
+        inputs[i].input_to = this;
+    }
 }

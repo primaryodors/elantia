@@ -3,6 +3,11 @@
 #include "activation.h"
 #include <math.h>
 
+float acfn_identity(float x, float alpha, float lambda)
+{
+    return x;
+}
+
 float acfn_sigmoid( float x, float alpha, float lambda)
 {
     return 1.0 / (1.0 + exp(-x));

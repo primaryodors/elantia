@@ -2,7 +2,9 @@
 #ifndef _constants
 #define _constants
 
-enum NeuralType
+#include <math.h>
+
+enum ActivationFunction
 {
     // https://en.wikipedia.org/wiki/Activation_function
     Sigmoid,
@@ -17,5 +19,13 @@ enum NeuralType
     SiLU,
     Gaussian
 };
+
+float frand(float lmin, float lmax)
+{
+    int r = rand();
+    float f = (float)r / RAND_MAX;
+    f *= (lmax-lmin);
+    return f+lmin;
+}
 
 #endif

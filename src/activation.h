@@ -3,6 +3,7 @@
 #define _activation
 
 // Even though not all functions use alpha or lambda, our function pointer call must send the same params no matter what for maximum performance.
+float acfn_identity(float x, float alpha, float lambda);
 float acfn_sigmoid( float x, float alpha, float lambda);
 float acfn_tanh(    float x, float alpha, float lambda);
 float acfn_relu(    float x, float alpha, float lambda);

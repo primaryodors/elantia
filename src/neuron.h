@@ -10,17 +10,17 @@ struct Connection;
 class Neuron
 {
     protected:
-    Connection** inputs = nullptr;
-    Connection** outputs = nullptr;
-    NeuralType type;
+    Connection* inputs = nullptr;
+    ActivationFunction acv_fn;
     float (*activation_function)(float, float, float) = nullptr;
     float alpha = 1;            // Not used by all types.
     float lambda = 1;           // "
     float rate = 0;
 
     public:
-    Neuron (NeuralType type);
+    Neuron (ActivationFunction acv_function);
     float compute_firing_rate();
+    float compute_rate_direct(float input);
     Connection* attach_input(Neuron* n);
 };
 
