@@ -10,6 +10,8 @@ class NeuralNetwork
     Layer* outputs = nullptr;
     Layer** inner_layers = nullptr;
 
+    void name_neurons();
+
     public:
     NeuralNetwork(int inputs, int outputs, int layers, Layer* layer_array);
     NeuralNetwork(int inputs, int outputs, int layers, Layer* layer_array, ActivationFunction input_acv_fn, ActivationFunction output_acv_fn);

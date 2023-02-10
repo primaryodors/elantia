@@ -1,11 +1,18 @@
 
+#include <iostream>
 #include "neuron.h"
+
+using namespace std;
 
 Neuron::Neuron (ActivationFunction af)
 {
     acv_fn = af;
     switch (af)
     {
+        case Identity:
+        activation_function = acfn_identity;
+        break;
+
         case Sigmoid:
         activation_function = acfn_sigmoid;
         break;
@@ -69,6 +76,15 @@ float Neuron::compute_firing_rate()
         int i;
         for (i=0; inputs[i].input_to == this; i++)
             x += inputs[i].output_from->rate * inputs[i].multiplier;
+        
+        /*if (fabs(x) > 0.9)
+        {
+            for (i=0; inputs[i].input_to == this; i++) inputs[i].multiplier *= 0.99;
+        }
+        else if (x < 0.1)
+        {
+            for (i=0; inputs[i].input_to == this; i++) inputs[i].multiplier += frand(0, 0.1);
+        }*/
     }
 
     return compute_rate_direct(x);
@@ -77,7 +93,7 @@ float Neuron::compute_firing_rate()
 float Neuron::compute_rate_direct(float x)
 {
     rate = activation_function(x, alpha, lambda);
-    if (rate < -1) rate = -1;
+    if (rate < -0.5) rate = -0.5;
     if (rate > 1) rate = 1;
     return rate;
 }
@@ -100,6 +116,8 @@ Connection* Neuron::attach_input(Neuron* n)
     inputs[i].output_from = n;
     inputs[i].multiplier = frand(-0.5, 0.5);
     inputs[i].input_to = this;
+
+    // cout << inputs[i].output_from->name << " -> " << inputs[i].input_to->name << " (" << inputs[i].multiplier << ")" << endl;
 
     return &(inputs[i]);
 }
@@ -145,18 +163,18 @@ void Neuron::put_it_back()
     {
         int j = last_tweaked - 10000;
         inputs[j].multiplier = last_tweaked_value;
-        inputs[j].dmult *= -0.666;
+        inputs[j].dmult *= -0.9;
     }
     else switch (last_tweaked)
     {
         case 1:
         alpha = last_tweaked_value;
-        dalpha *= -0.666;
+        dalpha *= -0.9;
         break;
 
         case 2:
         lambda = last_tweaked_value;
-        dlambda *= -0.666;
+        dlambda *= -0.9;
         break;
 
         default:
@@ -169,20 +187,53 @@ void Neuron::fire_together_wire_together()
     if (!inputs) return;
 
     int i;
+    float tmp = 0, tmm = 0;
     for (i=0; inputs[i].input_to == this; i++)
     {
-        if ((inputs[i].output_from->rate*inputs[i].multiplier) >= 0.1)
+        if ((inputs[i].output_from->rate*inputs[i].multiplier) >= 0.001)
         {
-            inputs[i].multiplier *= 1.1;
+            inputs[i].multiplier *= 1.3;
             if (inputs[i].multiplier < -1) inputs[i].multiplier = -1;
-            if (inputs[i].multiplier > 1) inputs[i].multiplier = 1;
-            inputs[i].dmult = (inputs[i].multiplier >= 0) ? 0.1 : -0.1;
+            // if (inputs[i].multiplier > 1) inputs[i].multiplier = 1;
+            inputs[i].dmult += (inputs[i].multiplier >= 0) ? 0.2 : -0.2;
+
+            // cout << "Strengthening " << inputs[i].output_from->name << " -> " << name << " (" << inputs[i].multiplier << ")." << endl;
 
             inputs[i].output_from->fire_together_wire_together();
         }
         else if ((inputs[i].output_from->rate*inputs[i].multiplier) < 0)
         {
             inputs[i].multiplier *= 0.8;
+        }
+
+        if (inputs[i].multiplier >= 0) tmp += inputs[i].multiplier;
+        else tmm += inputs[i].multiplier;
+    }
+
+    if (tmp)
+    {
+        for (i=0; inputs[i].input_to == this; i++) if (inputs[i].multiplier >= 0) inputs[i].multiplier /= tmp;
+    }
+
+    if (tmm)
+    {
+        tmm = fabs(tmm);
+        for (i=0; inputs[i].input_to == this; i++) if (inputs[i].multiplier < 0) inputs[i].multiplier /= tmm;
+    }
+}
+
+void Neuron::forget()
+{
+    return;
+    if (!inputs) return;
+
+    int i;
+    for (i=0; inputs[i].input_to == this; i++)
+    {
+        if ((inputs[i].output_from->rate*inputs[i].multiplier) >= 0.1)
+        {
+            inputs[i].multiplier *= 0.5;
+            inputs[i].output_from->forget();
         }
     }
 }

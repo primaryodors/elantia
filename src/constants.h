@@ -7,6 +7,7 @@
 enum ActivationFunction
 {
     // https://en.wikipedia.org/wiki/Activation_function
+    Identity,
     Sigmoid,
     Hyperbolic,
     ReLU,

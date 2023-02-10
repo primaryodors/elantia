@@ -1,6 +1,9 @@
 
 #include "layer.h"
 #include <math.h>
+#include <iostream>
+
+using namespace std;
 
 Layer::Layer(int n, ActivationFunction af)
 {
@@ -36,8 +39,10 @@ void Layer::compute_all()
     int i;
     for (i=0; i<num_neurons; i++)
     {
-        neurons[i]->compute_firing_rate();
+        float f = neurons[i]->compute_firing_rate();
+        // cout << neurons[i]->name << " = " << f << "; ";
     }
+    // cout << endl;
 }
 
 int Layer::count_neurons()

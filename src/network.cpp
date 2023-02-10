@@ -18,6 +18,8 @@ NeuralNetwork::NeuralNetwork(int i, int o, int l, Layer* la, ActivationFunction 
     int j;
     for (j=0; j<l; j++) inner_layers[j] = &(la[j]);
 
+    name_neurons();
+
     inner_layers[0]->connect_layer(inputs, 1);
     outputs->connect_layer(inner_layers[l-1], 1);
 }
@@ -32,6 +34,11 @@ NeuralNetwork::NeuralNetwork(int i, int o, int l, int ln, ActivationFunction af)
     for (j=0; j<l; j++)
     {
         inner_layers[j] = new Layer(ln, af);
+    }
+
+    name_neurons();
+    for (j=0; j<l; j++)
+    {
         if (j) inner_layers[j]->connect_layer(inner_layers[j-1], 1);
     }
 
@@ -39,10 +46,32 @@ NeuralNetwork::NeuralNetwork(int i, int o, int l, int ln, ActivationFunction af)
     outputs->connect_layer(inner_layers[l-1], 1);
 }
 
+void NeuralNetwork::name_neurons()
+{
+    int i, j;
+
+    int ic = inputs->count_neurons();
+    for (i=0; i<ic; i++) inputs->get_neuron(i)->name = (std::string)"i:" + std::to_string(i+1);
+
+    for (j=0; inner_layers[j]; j++)
+    {
+        ic = inner_layers[j]->count_neurons();
+        for (i=0; i<ic; i++) 
+            inner_layers[j]->get_neuron(i)->name = (std::string)"l" + std::to_string(j+1) + (std::string)":" + std::to_string(i+1);
+    }
+
+    ic = outputs->count_neurons();
+    for (i=0; i<ic; i++) outputs->get_neuron(i)->name = (std::string)"o:" + std::to_string(i+1);
+}
+
 float NeuralNetwork::train(float* iv, int coi)
 {
     int ic = inputs->count_neurons();
     int i, l, m;
+
+    /*cout << "Training inputs [ ";
+    for (i=0; i<ic; i++) cout << iv[i] << " ";
+    cout << " ] to output " << coi << endl;*/
 
     for (i=0; i<ic; i++) inputs->get_neuron(i)->compute_rate_direct(iv[i]);
 
@@ -63,6 +92,7 @@ float NeuralNetwork::train(float* iv, int coi)
     {
         if (i == coi) continue;
         goodness -= outvals[i];
+        outputs->get_neuron(i)->forget();
     }
 
     outputs->get_neuron(coi)->fire_together_wire_together();
@@ -117,6 +147,7 @@ int NeuralNetwork::predict(float* iv)
     ic = outputs->count_neurons();
     float greatest = 0;
     int result = -1;
+    cout << endl;
     for (i=0; i<ic; i++)
     {
         Neuron* n = outputs->get_neuron(i);

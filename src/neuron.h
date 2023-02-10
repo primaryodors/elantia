@@ -3,6 +3,7 @@
 #define _neuron
 
 #include <stdio.h>
+#include <string>
 #include "constants.h"
 #include "activation.h"
 
@@ -27,6 +28,7 @@ class Neuron
     // Constructor and Initialization
     Neuron (ActivationFunction acv_function);
     Connection* attach_input(Neuron* n);
+    std::string name;
 
     // Serialization
     void write(FILE* pfile);
@@ -39,7 +41,8 @@ class Neuron
     // Learning
     void tweak_something();
     void put_it_back();
-    void fire_together_wire_together();
+    void fire_together_wire_together();             // Strengthen positive inputs.
+    void forget();                                  // Weaken positive inputs.
 };
 
 struct Connection
