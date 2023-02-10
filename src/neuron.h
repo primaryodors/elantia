@@ -24,6 +24,8 @@ class Neuron
     int last_tweaked = 0;
     float last_tweaked_value = 0;
 
+    void equalize_inputs();
+
     public:
     // Constructor and Initialization
     Neuron (ActivationFunction acv_function);

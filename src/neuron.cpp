@@ -75,7 +75,7 @@ float Neuron::compute_firing_rate()
     {
         int i;
         for (i=0; inputs[i].input_to == this; i++)
-            x += inputs[i].output_from->rate * inputs[i].multiplier;
+            x += (inputs[i].output_from->rate * inputs[i].multiplier);
         
         /*if (fabs(x) > 0.9)
         {
@@ -114,7 +114,7 @@ Connection* Neuron::attach_input(Neuron* n)
         }
     }
     inputs[i].output_from = n;
-    inputs[i].multiplier = frand(-0.5, 0.5);
+    inputs[i].multiplier = frand(-0.5, 1);
     inputs[i].input_to = this;
 
     // cout << inputs[i].output_from->name << " -> " << inputs[i].input_to->name << " (" << inputs[i].multiplier << ")" << endl;
@@ -182,7 +182,7 @@ void Neuron::put_it_back()
     }
 }
 
-void Neuron::fire_together_wire_together()
+void Neuron::equalize_inputs()
 {
     if (!inputs) return;
 
@@ -190,7 +190,42 @@ void Neuron::fire_together_wire_together()
     float tmp = 0, tmm = 0;
     for (i=0; inputs[i].input_to == this; i++)
     {
-        if ((inputs[i].output_from->rate*inputs[i].multiplier) >= 0.001)
+        if (inputs[i].multiplier >= 0) tmp += inputs[i].multiplier;
+        else tmm += fabs(inputs[i].multiplier);
+    }
+
+    if (tmp)
+    {
+        tmp = 1.0/tmp;
+        for (i=0; inputs[i].input_to == this; i++) if (inputs[i].multiplier > 0) inputs[i].multiplier *= tmp;
+    }
+
+    if (tmm)
+    {
+        tmm = 0.666/fabs(tmm);
+        for (i=0; inputs[i].input_to == this; i++) if (inputs[i].multiplier < 0) inputs[i].multiplier *= tmm;
+    }
+}
+
+void Neuron::fire_together_wire_together()
+{
+    if (!inputs) return;
+
+    #if true
+    int i;
+    for (i=0; inputs[i].input_to == this; i++)
+    {
+        float f = inputs[i].output_from->rate * inputs[i].multiplier;
+        if (inputs[i].output_from->rate > 0.1) inputs[i].multiplier += 0.2*fabs(f);
+        inputs[i].output_from->fire_together_wire_together();
+    }
+
+    #else
+    int i;
+    for (i=0; inputs[i].input_to == this; i++)
+    {
+        float f = inputs[i].output_from->rate * inputs[i].multiplier;
+        if (f >= 0.001)
         {
             inputs[i].multiplier *= 1.3;
             if (inputs[i].multiplier < -1) inputs[i].multiplier = -1;
@@ -201,39 +236,35 @@ void Neuron::fire_together_wire_together()
 
             inputs[i].output_from->fire_together_wire_together();
         }
-        else if ((inputs[i].output_from->rate*inputs[i].multiplier) < 0)
+        else if (f < 0)
         {
-            inputs[i].multiplier *= 0.8;
+            inputs[i].multiplier *= -1;
         }
-
-        if (inputs[i].multiplier >= 0) tmp += inputs[i].multiplier;
-        else tmm += inputs[i].multiplier;
     }
+    #endif
 
-    if (tmp)
-    {
-        for (i=0; inputs[i].input_to == this; i++) if (inputs[i].multiplier >= 0) inputs[i].multiplier /= tmp;
-    }
-
-    if (tmm)
-    {
-        tmm = fabs(tmm);
-        for (i=0; inputs[i].input_to == this; i++) if (inputs[i].multiplier < 0) inputs[i].multiplier /= tmm;
-    }
+    equalize_inputs();
 }
 
 void Neuron::forget()
 {
-    return;
+    // return;
     if (!inputs) return;
 
     int i;
     for (i=0; inputs[i].input_to == this; i++)
     {
+        #if true
+        float f = inputs[i].output_from->rate * inputs[i].multiplier;
+        if (inputs[i].output_from->rate >= 0.2) inputs[i].multiplier -= 0.2*fabs(f);
+        #else
         if ((inputs[i].output_from->rate*inputs[i].multiplier) >= 0.1)
         {
             inputs[i].multiplier *= 0.5;
             inputs[i].output_from->forget();
         }
+        #endif
     }
+
+    equalize_inputs();
 }
