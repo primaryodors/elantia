@@ -15,7 +15,7 @@ class NeuralNetwork
     NeuralNetwork(int inputs, int outputs, int layers, Layer* layer_array, ActivationFunction input_acv_fn, ActivationFunction output_acv_fn);
     NeuralNetwork(int inputs, int outputs, int layers, int layer_neurons, ActivationFunction activation);
 
-    void train(float* input_values, int correct_output_idx);
+    float train(float* input_values, int correct_output_idx);
     int predict(float* input_values);
 };
 

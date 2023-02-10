@@ -1,5 +1,8 @@
 
+#include <iostream>
 #include "network.h"
+
+using namespace std;
 
 NeuralNetwork::NeuralNetwork(int i, int o, int l, Layer* la)
 {
@@ -26,20 +29,23 @@ NeuralNetwork::NeuralNetwork(int i, int o, int l, int ln, ActivationFunction af)
 
     inner_layers = new Layer*[l+2];
     int j;
-    for (j=0; j<l; j++) inner_layers[j] = new Layer(ln, af);
+    for (j=0; j<l; j++)
+    {
+        inner_layers[j] = new Layer(ln, af);
+        if (j) inner_layers[j]->connect_layer(inner_layers[j-1], 1);
+    }
 
     inner_layers[0]->connect_layer(inputs, 1);
     outputs->connect_layer(inner_layers[l-1], 1);
 }
 
-void NeuralNetwork::train(float* iv, int coi)
+float NeuralNetwork::train(float* iv, int coi)
 {
     int ic = inputs->count_neurons();
     int i, l, m;
 
     for (i=0; i<ic; i++) inputs->get_neuron(i)->compute_rate_direct(iv[i]);
 
-    inputs->compute_all();
     for (i=0; inner_layers[i]; i++) inner_layers[i]->compute_all();
 
     ic = outputs->count_neurons();
@@ -58,6 +64,9 @@ void NeuralNetwork::train(float* iv, int coi)
         if (i == coi) continue;
         goodness -= outvals[i];
     }
+
+    outputs->get_neuron(coi)->fire_together_wire_together();
+    return goodness;
 
     for (l=0; inner_layers[l]; l++)
     {
@@ -92,6 +101,8 @@ void NeuralNetwork::train(float* iv, int coi)
             }
         }
     }
+
+    return goodness;
 }
 
 int NeuralNetwork::predict(float* iv)
@@ -101,7 +112,6 @@ int NeuralNetwork::predict(float* iv)
 
     for (i=0; i<ic; i++) inputs->get_neuron(i)->compute_rate_direct(iv[i]);
 
-    inputs->compute_all();
     for (i=0; inner_layers[i]; i++) inner_layers[i]->compute_all();
 
     ic = outputs->count_neurons();
@@ -111,12 +121,14 @@ int NeuralNetwork::predict(float* iv)
     {
         Neuron* n = outputs->get_neuron(i);
         float f = n->compute_firing_rate();
+        cout << f << " ";
         if (f > greatest)
         {
             greatest = f;
             result = i;
         }
     }
+    cout << endl;
 
     return result;
 }

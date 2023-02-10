@@ -2,6 +2,7 @@
 #ifndef _neuron
 #define _neuron
 
+#include <stdio.h>
 #include "constants.h"
 #include "activation.h"
 
@@ -19,15 +20,26 @@ class Neuron
 
     float dalpha = 0;
     float dlambda = 0;
+    int last_tweaked = 0;
+    float last_tweaked_value = 0;
 
     public:
+    // Constructor and Initialization
     Neuron (ActivationFunction acv_function);
-    float compute_firing_rate();
-    float compute_rate_direct(float input);
     Connection* attach_input(Neuron* n);
 
+    // Serialization
+    void write(FILE* pfile);
+    void read(FILE* pfile);
+
+    // Prediction
+    float compute_firing_rate();
+    float compute_rate_direct(float input);
+
+    // Learning
     void tweak_something();
     void put_it_back();
+    void fire_together_wire_together();
 };
 
 struct Connection
