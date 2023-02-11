@@ -211,59 +211,26 @@ void Neuron::fire_together_wire_together()
 {
     if (!inputs) return;
 
-    #if true
     int i;
     for (i=0; inputs[i].input_to == this; i++)
     {
-        float f = inputs[i].output_from->rate * inputs[i].multiplier;
-        if (inputs[i].output_from->rate > 0.0001) inputs[i].multiplier += 0.5*fabs(f);
-        inputs[i].output_from->fire_together_wire_together();
+        if (rate < rate_cutoff) inputs[i].multiplier += inputs[i].output_from->rate;
+        if (inputs[i].output_from->rate >= rate_cutoff) inputs[i].output_from->fire_together_wire_together();
     }
-
-    #else
-    int i;
-    for (i=0; inputs[i].input_to == this; i++)
-    {
-        float f = inputs[i].output_from->rate * inputs[i].multiplier;
-        if (f >= 0.001)
-        {
-            inputs[i].multiplier *= 1.3;
-            if (inputs[i].multiplier < -1) inputs[i].multiplier = -1;
-            // if (inputs[i].multiplier > 1) inputs[i].multiplier = 1;
-            inputs[i].dmult += (inputs[i].multiplier >= 0) ? 0.2 : -0.2;
-
-            // cout << "Strengthening " << inputs[i].output_from->name << " -> " << name << " (" << inputs[i].multiplier << ")." << endl;
-
-            inputs[i].output_from->fire_together_wire_together();
-        }
-        else if (f < 0)
-        {
-            inputs[i].multiplier *= -1;
-        }
-    }
-    #endif
 
     equalize_inputs();
 }
 
 void Neuron::forget()
 {
-    // return;
+    return;
     if (!inputs) return;
 
     int i;
     for (i=0; inputs[i].input_to == this; i++)
     {
-        #if true
-        float f = inputs[i].output_from->rate * inputs[i].multiplier;
-        if (inputs[i].output_from->rate >= 0.2) inputs[i].multiplier -= 0.2*fabs(f);
-        #else
-        if ((inputs[i].output_from->rate*inputs[i].multiplier) >= 0.1)
-        {
-            inputs[i].multiplier *= 0.5;
-            inputs[i].output_from->forget();
-        }
-        #endif
+        if (rate > rate_cutoff) inputs[i].multiplier -= inputs[i].output_from->rate;
+        if (inputs[i].output_from->rate < rate_cutoff) inputs[i].output_from->forget();
     }
 
     equalize_inputs();

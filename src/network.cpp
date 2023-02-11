@@ -26,7 +26,7 @@ NeuralNetwork::NeuralNetwork(int i, int o, int l, Layer* la, ActivationFunction 
 
 NeuralNetwork::NeuralNetwork(int i, int o, int l, int ln, ActivationFunction af)
 {
-    inputs = new Layer(i, Sigmoid);
+    inputs = new Layer(i, PReLU);
     outputs = new Layer(o, PReLU);
 
     inner_layers = new Layer*[l+2];
@@ -147,19 +147,19 @@ int NeuralNetwork::predict(float* iv)
     ic = outputs->count_neurons();
     float greatest = 0;
     int result = -1;
-    cout << endl;
+    // cout << endl;
     for (i=0; i<ic; i++)
     {
         Neuron* n = outputs->get_neuron(i);
         float f = n->compute_firing_rate();
-        cout << f << " ";
+        // cout << f << " ";
         if (f > greatest)
         {
             greatest = f;
             result = i;
         }
     }
-    cout << endl;
+    // cout << endl;
 
     return result;
 }

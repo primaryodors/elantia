@@ -4,6 +4,8 @@
 
 #include <math.h>
 
+#define rate_cutoff 0.333
+
 enum ActivationFunction
 {
     // https://en.wikipedia.org/wiki/Activation_function

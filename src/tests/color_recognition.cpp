@@ -37,7 +37,7 @@ int main (int argc, char** argv)
 {
     srand(time(0));
 
-    NeuralNetwork net(3, 10, 3, 20, Sigmoid);
+    NeuralNetwork net(3, 10, 2, 50, PReLU);
 
     int rfshrate = 1;
     int iters = 100;
@@ -112,7 +112,7 @@ int main (int argc, char** argv)
         }
         cout << endl << endl;
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(250));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
         for (j=0; j<10; j++)
         {
             float g = net.train(trainvals[j], j);
@@ -125,7 +125,7 @@ int main (int argc, char** argv)
 
     float testval[3];
 
-    for (i=0; i<10; i++)
+    for (i=0; i<20; i++)
     {
         if (i < 3)
         {
@@ -164,7 +164,7 @@ int main (int argc, char** argv)
             cout << "some other color";
         }
 
-        cout << "." << endl;
+        cout << "." << endl << endl;
     }
 
     return 0;
