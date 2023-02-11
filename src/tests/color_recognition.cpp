@@ -8,16 +8,13 @@ using namespace std;
 
 float trainvals[10][3] =
 {
-    {0.0f,0.0f,0.0f},       // black
-    {0.5f,0.5f,0.5f},       // gray
-    {1.0f,1.0f,1.0f},       // white
-    {0.5f,0.3f,0.1f},       // brown
-    {1.0f,0.0f,0.0f},       // red
+    {1.0f,0.1f,0.0f},       // red
     {1.0f,0.5f,0.0f},       // orange
-    {1.0f,1.0f,0.0f},       // yellow
-    {0.0f,1.0f,0.0f},       // green
+    {1.0f,0.9f,0.0f},       // yellow
+    {0.3f,1.0f,0.0f},       // green
     {0.0f,0.5f,1.0f},       // blue
-    {0.7f,0.0f,0.1f}        // purple
+    {0.5f,0.0f,1.0f},       // purple
+    {1.0f,0.0f,1.0f}        // magenta
 };
 
 void set_bkcolor(int r, int g, int b)
@@ -37,10 +34,10 @@ int main (int argc, char** argv)
 {
     srand(time(0));
 
-    NeuralNetwork net(3, 10, 2, 50, PReLU);
+    NeuralNetwork net(3, 7, 1, 50, PReLU);
 
-    int rfshrate = 1;
-    int iters = 100;
+    int rfshrate = 7;
+    int iters = 100000;
 
     int i, j, iter;
     Layer* il = net.get_input_layer();
@@ -51,6 +48,7 @@ int main (int argc, char** argv)
         ln->color.green = (i==1) ? 255 : 0;
         ln->color.blue = (i==2) ? 255 : 0;
     }
+    int layers = net.get_num_layers();
 
     cout << endl;
     for (iter=1; iter<=iters; iter++)
@@ -64,7 +62,6 @@ int main (int argc, char** argv)
             cout << "(" << wg << " ~ " << bg << ")" << "...                                                 " << endl; 
 
             cout << endl;
-            int layers = net.get_num_layers();
             int layer;
             for (layer=0; layer <= layers; layer++)
             {
@@ -108,12 +105,11 @@ int main (int argc, char** argv)
                 cout << endl;
             }
 
-            if (iter < iters) cout << "\x1b[" << (layers+6) << "A";
+            if (iter < iters) cout << "\x1b[" << (layers+4) << "A";
         }
-        cout << endl << endl;
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        for (j=0; j<10; j++)
+        // std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        for (j=0; j<7; j++)
         {
             float g = net.train(trainvals[j], j);
             if (!j || g < wg) wg = g;
@@ -121,7 +117,8 @@ int main (int argc, char** argv)
         }
     }
 
-    cout << endl << endl << endl << endl;
+    for (i=0; i<layers; i++) cout << endl;
+    cout << endl << endl << endl << endl << endl << endl;
 
     float testval[3];
 
@@ -150,16 +147,13 @@ int main (int argc, char** argv)
 
         switch (result)
         {
-            case 0: cout << "black"; break;
-            case 1: cout << "gray"; break;
-            case 2: cout << "white"; break;
-            case 3: cout << "brown"; break;
-            case 4: cout << "red"; break;
-            case 5: cout << "orange"; break;
-            case 6: cout << "yellow"; break;
-            case 7: cout << "green"; break;
-            case 8: cout << "blue"; break;
-            case 9: cout << "purple"; break;
+            case 0: cout << "red"; break;
+            case 1: cout << "orange"; break;
+            case 2: cout << "yellow"; break;
+            case 3: cout << "green"; break;
+            case 4: cout << "blue"; break;
+            case 5: cout << "purple"; break;
+            case 6: cout << "magenta"; break;
             default:
             cout << "some other color";
         }
