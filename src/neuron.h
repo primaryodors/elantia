@@ -9,6 +9,13 @@
 
 struct Connection;
 
+struct Color
+{
+    int red;
+    int green;
+    int blue;
+};
+
 class Neuron
 {
     protected:
@@ -31,6 +38,11 @@ class Neuron
     Neuron (ActivationFunction acv_function);
     Connection* attach_input(Neuron* n);
     std::string name;
+    Color color;
+
+    // Getters
+    int get_num_inputs();
+    const Connection* get_input(int index);
 
     // Serialization
     void write(FILE* pfile);

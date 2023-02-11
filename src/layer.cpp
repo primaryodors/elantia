@@ -45,12 +45,12 @@ void Layer::compute_all()
     // cout << endl;
 }
 
-int Layer::count_neurons()
+int Layer::count_neurons() const
 {
     return num_neurons;
 }
 
-Neuron* Layer::get_neuron(int index)
+Neuron* Layer::get_neuron(int index) const
 {
     return neurons[index];
 }

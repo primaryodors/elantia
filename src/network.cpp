@@ -39,7 +39,7 @@ NeuralNetwork::NeuralNetwork(int i, int o, int l, int ln, ActivationFunction af)
     name_neurons();
     for (j=0; j<l; j++)
     {
-        if (j) inner_layers[j]->connect_layer(inner_layers[j-1], 1);
+        if (j) inner_layers[j]->connect_layer(inner_layers[j-1], 0.75);
     }
 
     inner_layers[0]->connect_layer(inputs, 1);
@@ -162,4 +162,27 @@ int NeuralNetwork::predict(float* iv)
     cout << endl;
 
     return result;
+}
+
+int NeuralNetwork::get_num_layers()
+{
+    if (!inner_layers) return 0;
+    int i;
+    for (i=0; inner_layers[i]; i++); // get count.
+    return i;
+}
+
+Layer* NeuralNetwork::get_layer(int i)
+{
+    return inner_layers[i];
+}
+
+Layer* NeuralNetwork::get_input_layer()
+{
+    return inputs;
+}
+
+Layer* NeuralNetwork::get_output_layer()
+{
+    return outputs;
 }

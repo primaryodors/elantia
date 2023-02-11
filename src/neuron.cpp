@@ -216,7 +216,7 @@ void Neuron::fire_together_wire_together()
     for (i=0; inputs[i].input_to == this; i++)
     {
         float f = inputs[i].output_from->rate * inputs[i].multiplier;
-        if (inputs[i].output_from->rate > 0.1) inputs[i].multiplier += 0.2*fabs(f);
+        if (inputs[i].output_from->rate > 0.0001) inputs[i].multiplier += 0.5*fabs(f);
         inputs[i].output_from->fire_together_wire_together();
     }
 
@@ -267,4 +267,18 @@ void Neuron::forget()
     }
 
     equalize_inputs();
+}
+
+int Neuron::get_num_inputs()
+{
+    if (!inputs) return 0;
+    int i;
+    for (i=0; inputs[i].input_to == this; i++);         // Get count.
+    return i;
+}
+
+const Connection* Neuron::get_input(int i)
+{
+    if (!inputs) return 0;
+    return &(inputs[i]);
 }
