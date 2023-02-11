@@ -35,13 +35,15 @@ Neuron::Neuron (ActivationFunction af)
 
         case ELU:
         activation_function = acfn_elu;
-        dalpha = frand (-0.05, 0.05);
+        dalpha = frand(-0.05, 0.05);
+        alpha = 1;
         break;
 
         case SELU:
         activation_function = acfn_selu;
-        dalpha = frand (-0.05, 0.05);
-        dlambda = frand (-0.05, 0.05);
+        dalpha = frand(-0.05, 0.05);
+        dlambda = frand(-0.05, 0.05);
+        alpha = 1.67;
         break;
 
         case LReLU:
@@ -50,7 +52,8 @@ Neuron::Neuron (ActivationFunction af)
 
         case PReLU:
         activation_function = acfn_prelu;
-        dalpha = frand (-0.05, 0.05);
+        dalpha = frand(-0.05, 0.05);
+        alpha = 0.7;
         break;
 
         case SiLU:

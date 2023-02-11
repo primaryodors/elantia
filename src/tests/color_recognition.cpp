@@ -34,7 +34,7 @@ int main (int argc, char** argv)
 {
     srand(time(0));
 
-    NeuralNetwork net(3, 7, 1, 50, PReLU);
+    NeuralNetwork net(3, 7, 2, 20, SELU);
 
     int rfshrate = 7;
     int iters = 100000;
