@@ -96,7 +96,7 @@ float NeuralNetwork::train(float* iv, int coi)
     }
 
     outputs->get_neuron(coi)->fire_together_wire_together();
-    return goodness;
+    if (frand(0,1) > -0.25) return goodness;
 
     for (l=0; inner_layers[l]; l++)
     {

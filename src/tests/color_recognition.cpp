@@ -34,10 +34,10 @@ int main (int argc, char** argv)
 {
     srand(time(0));
 
-    NeuralNetwork net(3, 7, 2, 20, SELU);
+    NeuralNetwork net(3, 7, 2, 100, SELU);
 
     int rfshrate = 7;
-    int iters = 100000;
+    int iters = 5000;
 
     int i, j, iter;
     Layer* il = net.get_input_layer();

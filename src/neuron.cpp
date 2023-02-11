@@ -166,7 +166,7 @@ void Neuron::put_it_back()
     {
         int j = last_tweaked - 10000;
         inputs[j].multiplier = last_tweaked_value;
-        inputs[j].dmult *= -0.9;
+        inputs[j].dmult *= -0.666;
     }
     else switch (last_tweaked)
     {

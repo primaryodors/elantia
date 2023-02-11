@@ -64,7 +64,7 @@ struct Connection
     Neuron* output_from = nullptr;
     Neuron* input_to = nullptr;
     float multiplier = 0;
-    float dmult = frand(-0.5, 0.5);
+    float dmult = frand(-0.02, 0.02);
 };
 
 #endif
