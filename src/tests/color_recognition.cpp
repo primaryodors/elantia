@@ -12,8 +12,8 @@ float trainvals[10][3] =
     {1.0f,0.5f,0.0f},       // orange
     {1.0f,0.9f,0.0f},       // yellow
     {0.3f,1.0f,0.0f},       // green
-    {0.0f,0.5f,1.0f},       // blue
-    {0.5f,0.0f,1.0f},       // purple
+    {0.0f,0.4f,1.0f},       // blue
+    {0.6f,0.0f,1.0f},       // purple
     {1.0f,0.0f,1.0f}        // magenta
 };
 
