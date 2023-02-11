@@ -4,8 +4,8 @@
 
 #include <stdio.h>
 #include <string>
-#include "constants.h"
-#include "activation.h"
+#include "../constants.h"
+#include "../activation.h"
 
 struct Connection;
 

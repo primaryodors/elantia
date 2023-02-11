@@ -2,7 +2,7 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
-#include "../network.h"
+#include "../classes/network.h"
 
 using namespace std;
 
@@ -13,8 +13,8 @@ float trainvals[10][3] =
     {1.0f,0.9f,0.0f},       // yellow
     {0.3f,1.0f,0.0f},       // green
     {0.0f,0.4f,1.0f},       // blue
-    {0.6f,0.0f,1.0f},       // purple
-    {1.0f,0.0f,1.0f}        // magenta
+    {0.7f,0.0f,1.0f},       // purple
+    {1.0f,0.0f,0.9f}        // magenta
 };
 
 void set_bkcolor(int r, int g, int b)
