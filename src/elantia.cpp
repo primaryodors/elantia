@@ -114,6 +114,9 @@ int main (int argc, char** argv)
                     }
                 }
 
+                float f = atof(&(buffer[l]));
+                instemp.push_back(f);
+
                 train_ins.push_back(instemp);
             }
         }
@@ -144,7 +147,7 @@ int main (int argc, char** argv)
 
         cout << endl << endl;
 
-        FILE* fp = fopen(argv[2], "wb");
+        fp = fopen(argv[2], "wb");
         if (!fp) return -2;
         neur->write(fp);
         fclose(fp);

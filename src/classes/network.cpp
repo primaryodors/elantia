@@ -23,7 +23,7 @@ NeuralNetwork::NeuralNetwork(int i, int o, int l, Layer* la, ActivationFunction 
 
     name_neurons();
 
-    inner_layers[0]->connect_layer(inputs, 1);
+    if (l) inner_layers[0]->connect_layer(inputs, 1);
     outputs->connect_layer(inner_layers[l-1], 1);
 }
 
@@ -161,11 +161,8 @@ NeuralNetwork* NeuralNetwork::read(FILE* fp)
     }
 
     // Output layer
-    int n;
-    Neuron* neu;
     fread(&n, sizeof(int), 1, fp);
     result->outputs = new Layer(n, Identity);
-    int i;
     for (i=0; i<n; i++)
     {
         neu = result->outputs->get_neuron(i);
@@ -233,7 +230,7 @@ float NeuralNetwork::train(std::vector<float> viv, int coi)
     int i;
     for (i=0; i<s; i++) iv[i] = viv[i];
     iv[s] = 0;
-    train(iv, coi);
+    return train(iv, coi);
 }
 
 float NeuralNetwork::train(float* iv, int coi)
