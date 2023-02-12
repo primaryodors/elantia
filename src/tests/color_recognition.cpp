@@ -166,5 +166,12 @@ int main (int argc, char** argv)
         cout << "." << endl << endl;
     }
 
+    FILE* fp = fopen("color_test.ai", "wb");
+    if (fp)
+    {
+        net.write(fp);
+        fclose(fp);
+    }
+
     return 0;
 }
