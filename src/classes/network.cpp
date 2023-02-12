@@ -226,6 +226,16 @@ void NeuralNetwork::name_neurons()
     for (i=0; i<ic; i++) outputs->get_neuron(i)->name = (std::string)"o:" + std::to_string(i+1);
 }
 
+float NeuralNetwork::train(std::vector<float> viv, int coi)
+{
+    int s = viv.size();
+    float iv[s + 2];
+    int i;
+    for (i=0; i<s; i++) iv[i] = viv[i];
+    iv[s] = 0;
+    train(iv, coi);
+}
+
 float NeuralNetwork::train(float* iv, int coi)
 {
     int ic = inputs->count_neurons();
