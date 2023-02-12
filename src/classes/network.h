@@ -10,6 +10,8 @@ class NeuralNetwork
     Layer* outputs = nullptr;
     Layer** inner_layers = nullptr;
 
+    float certainty = 0;
+
     void name_neurons();
 
     public:
@@ -24,6 +26,7 @@ class NeuralNetwork
 
     float train(float* input_values, int correct_output_idx);
     int predict(float* input_values);
+    float get_certainty() { return certainty; }
 };
 
 

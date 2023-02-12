@@ -146,6 +146,7 @@ int NeuralNetwork::predict(float* iv)
 
     ic = outputs->count_neurons();
     float greatest = 0;
+    float average = 0;
     int result = -1;
     // cout << endl;
     for (i=0; i<ic; i++)
@@ -158,8 +159,12 @@ int NeuralNetwork::predict(float* iv)
             greatest = f;
             result = i;
         }
+
+        average += f/ic;
     }
     // cout << endl;
+
+    certainty = (greatest-average) / greatest;
 
     return result;
 }
