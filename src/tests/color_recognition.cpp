@@ -2,6 +2,7 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <sys/time.h>
 #include "../classes/network.h"
 
 using namespace std;
@@ -10,7 +11,7 @@ float trainvals[10][3] =
 {
     {1.0f,0.1f,0.0f},       // red
     {1.0f,0.5f,0.0f},       // orange
-    {1.0f,0.9f,0.0f},       // yellow
+    {1.0f,0.8f,0.0f},       // yellow
     {0.3f,1.0f,0.0f},       // green
     {0.0f,0.4f,1.0f},       // blue
     {0.7f,0.0f,1.0f},       // purple
@@ -32,12 +33,10 @@ void reset_bkcolor()
 
 int main (int argc, char** argv)
 {
-    srand(time(0));
-
     NeuralNetwork net(3, 7, 2, 100, SELU);
 
     int rfshrate = 7;
-    int iters = 5000;
+    int iters = 10000;
 
     int i, j, iter;
     Layer* il = net.get_input_layer();
@@ -50,6 +49,10 @@ int main (int argc, char** argv)
     }
     int layers = net.get_num_layers();
 
+    struct timeval time;
+    gettimeofday(&time, NULL);
+    long began = ((unsigned long long)time.tv_sec * 1000000) + time.tv_usec;
+
     cout << endl;
     for (iter=1; iter<=iters; iter++)
     {
@@ -59,9 +62,6 @@ int main (int argc, char** argv)
 
         if (!(iter % rfshrate))
         {
-            cout << "(" << wg << " ~ " << bg << ")" << "...                                                 " << endl; 
-
-            cout << endl;
             int layer;
             for (layer=0; layer <= layers; layer++)
             {
@@ -105,7 +105,7 @@ int main (int argc, char** argv)
                 cout << endl;
             }
 
-            if (iter < iters) cout << "\x1b[" << (layers+4) << "A";
+            if (iter < iters) cout << "\x1b[" << (layers+2) << "A";
         }
 
         // std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -117,8 +117,11 @@ int main (int argc, char** argv)
         }
     }
 
+    gettimeofday(&time, NULL);
+    long finished = ((unsigned long long)time.tv_sec * 1000000) + time.tv_usec;
+
     for (i=0; i<layers; i++) cout << endl;
-    cout << endl << endl << endl << endl << endl << endl;
+    cout << endl << endl << endl << "Trained " << iters << " iterations in " << (finished-began)/1000 << " ms." << endl << endl << endl;
 
     float testval[3];
 

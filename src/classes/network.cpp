@@ -11,6 +11,8 @@ NeuralNetwork::NeuralNetwork(int i, int o, int l, Layer* la)
 
 NeuralNetwork::NeuralNetwork(int i, int o, int l, Layer* la, ActivationFunction input_acv_fn, ActivationFunction output_acv_fn)
 {
+    srand(time(0));
+
     inputs = new Layer(i, input_acv_fn);
     outputs = new Layer(o, output_acv_fn);
 
@@ -26,6 +28,8 @@ NeuralNetwork::NeuralNetwork(int i, int o, int l, Layer* la, ActivationFunction 
 
 NeuralNetwork::NeuralNetwork(int i, int o, int l, int ln, ActivationFunction af)
 {
+    srand(time(0));
+
     inputs = new Layer(i, PReLU);
     outputs = new Layer(o, PReLU);
 
