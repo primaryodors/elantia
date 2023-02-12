@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <vector>
 #include "network.h"
 
 using namespace std;
@@ -48,6 +49,80 @@ NeuralNetwork::NeuralNetwork(int i, int o, int l, int ln, ActivationFunction af)
 
     inner_layers[0]->connect_layer(inputs, 1);
     outputs->connect_layer(inner_layers[l-1], 1);
+}
+
+void NeuralNetwork::write(FILE* fp)
+{
+    std::vector<Neuron*> all_neurons;
+
+    // Input layer
+    int n = inputs->count_neurons();
+    Neuron* neu;
+    fwrite(&n, sizeof(int), 1, fp);
+    int i;
+    for (i=0; i<n; i++)
+    {
+        neu = inputs->get_neuron(i);
+        all_neurons.push_back(neu);
+        neu->write(fp);
+    }
+
+    // Inner layers
+    int m = get_num_layers();
+    fwrite(&m, sizeof(int), 1, fp);
+    int j;
+    for (j=0; j<m; j++)
+    {
+        n = inner_layers[j]->count_neurons();
+        fwrite(&n, sizeof(int), 1, fp);
+
+        for (i=0; i<n; i++)
+        {
+            neu = inner_layers[j]->get_neuron(i);
+            all_neurons.push_back(neu);
+            neu->write(fp);
+        }
+    }
+
+    // Output layer
+    n = outputs->count_neurons();
+    fwrite(&n, sizeof(int), 1, fp);
+    for (i=0; i<n; i++)
+    {
+        neu = outputs->get_neuron(i);
+        all_neurons.push_back(neu);
+        neu->write(fp);
+    }
+
+    // Connections
+    n = all_neurons.size();
+    for (i=0; i<n; i++)
+    {
+        neu = all_neurons[i];
+        int s = neu->name.size();
+
+        m = neu->get_num_inputs();
+        for (j=0; j<m; j++)
+        {
+            fwrite(&s, sizeof(int), 1, fp);
+            fwrite(neu->name.c_str(), sizeof(char), s, fp);
+
+            const Connection* c = neu->get_input(j);
+            fwrite(&(c->multiplier), sizeof(float), 1, fp);
+
+            int z = c->output_from->name.size();
+            fwrite(&z, sizeof(int), 1, fp);
+            fwrite(c->output_from->name.c_str(), sizeof(char), z, fp);
+        }
+    }
+
+    n = eof_magic;
+    fwrite(&n, sizeof(int), 1, fp);
+}
+
+void NeuralNetwork::read(FILE* fp)
+{
+    // TODO:
 }
 
 void NeuralNetwork::name_neurons()

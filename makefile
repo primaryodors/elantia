@@ -4,10 +4,12 @@ TSTDIR=tests
 
 DIRS=$(OBJDIR) $(BINDIR) $(TSTDIR)
 OBJS=$(OBJDIR)/misc.o $(OBJDIR)/activation.o $(OBJDIR)/neuron.o $(OBJDIR)/layer.o $(OBJDIR)/network.o
+APPS=$(BINDIR)/elantia
 TESTS=tests/color_recognition
 
 all: $(DIRS) \
 	 $(OBJS) \
+	 $(APPS) \
 	 $(TESTS)
 
 CC=g++
@@ -44,6 +46,9 @@ $(OBJDIR)/network.o: src/classes/network.h src/classes/network.cpp $(OBJDIR)/lay
 
 tests/color_recognition: src/tests/color_recognition.cpp $(OBJS)
 	$(CC) src/tests/color_recognition.cpp $(OBJS) -o tests/color_recognition $(CFLAGS)
+
+$(BINDIR)/elantia: src/elantia.cpp $(OBJS)
+	$(CC) src/elantia.cpp $(OBJS) -o $(BINDIR)/elantia $(CFLAGS)
 
 
 

@@ -69,6 +69,48 @@ Neuron::Neuron (ActivationFunction af)
     }
 }
 
+void Neuron::write(FILE* fp)
+{
+    fwrite(&version, sizeof(int), 1, fp);
+    fwrite(&acv_fn, sizeof(ActivationFunction), 1, fp);
+    fwrite(&alpha, sizeof(float), 1, fp);
+    fwrite(&lambda, sizeof(float), 1, fp);
+
+    int l = name.size();
+    fwrite(&l, sizeof(int), 1, fp);
+    if (l) fwrite(name.c_str(), sizeof(char), l, fp);
+
+    fwrite(&color, sizeof(Color), 1, fp);
+}
+
+void Neuron::read(FILE* fp)
+{
+    int lversion;
+    fread(&lversion, sizeof(int), 1, fp);
+
+    if (lversion > version) throw 0x200900;     // Too new: file was made by a newer version of the app.
+
+    if (lversion >= 1)
+    {
+        fread(&acv_fn, sizeof(ActivationFunction), 1, fp);
+        fread(&alpha, sizeof(float), 1, fp);
+        fread(&lambda, sizeof(float), 1, fp);
+
+        int l = 0;
+        fread(&l, sizeof(int), 1, fp);
+        if (l)
+        {
+            char buffer[l+4];
+            fread(buffer, sizeof(char), l, fp);
+            buffer[l] = 0;
+
+            name = (std::string)buffer;
+        }
+
+        fread(&color, sizeof(Color), 1, fp);
+    }
+}
+
 float Neuron::compute_firing_rate()
 {
     float x = 0;

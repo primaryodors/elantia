@@ -19,6 +19,7 @@ struct Color
 class Neuron
 {
     protected:
+    const int version = 1;      // Important: Update this if changing *any* serializable properties.
     Connection* inputs = nullptr;
     ActivationFunction acv_fn;
     float (*activation_function)(float, float, float) = nullptr;

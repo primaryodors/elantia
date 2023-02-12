@@ -5,6 +5,7 @@
 #include <math.h>
 
 #define rate_cutoff 0.333
+#define eof_magic 0xe9da1f1e
 
 enum ActivationFunction
 {
