@@ -121,8 +121,10 @@ int main (int argc, char** argv)
             }
         }
 
-        // Debug step
         k = train_outs.size();
+        
+        #if false
+        // Debug step
         for (i=0; i<k; i++)
         {
             cout << "Output " << train_outs[i] << " for ";
@@ -135,6 +137,7 @@ int main (int argc, char** argv)
             cout << "." << endl;
         }
         cout << endl;
+        #endif
 
         for (i=0; i<iters; i++)
         {
