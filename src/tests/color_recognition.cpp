@@ -158,7 +158,7 @@ int main (int argc, char** argv)
             cout << "some other color";
         }
 
-        cout << " (" << round(net.get_certainty()*100) << "% certain)";
+        cout << " (" << round(net.get_confidence()*100) << "% confidence)";
 
         cout << "." << endl << endl;
     }

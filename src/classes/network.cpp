@@ -164,7 +164,7 @@ int NeuralNetwork::predict(float* iv)
     }
     // cout << endl;
 
-    certainty = (greatest-average) / greatest;
+    confidence = (greatest-average) / greatest;
 
     return result;
 }
