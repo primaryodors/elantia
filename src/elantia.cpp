@@ -169,7 +169,7 @@ int main (int argc, char** argv)
 
         int result = neur->predict(input_vals);
 
-        cout << result << endl;
+        cout << result << " (" << 100*neur->get_confidence() << "%)" << endl;
     }
 
     return 0;
