@@ -22,7 +22,7 @@ class NeuralNetwork
 
     // Serialization
     void write(FILE* pfile);
-    void read(FILE* pfile);
+    static NeuralNetwork* read(FILE* pfile);
 
     // Layer ftns
     int get_num_layers();
@@ -32,6 +32,7 @@ class NeuralNetwork
 
     // Learning and predicting
     float train(float* input_values, int correct_output_idx);
+    float train(std::vector<float> input_values, int correct_output_idx);
     int predict(float* input_values);
     float get_confidence() { return confidence; }
 };

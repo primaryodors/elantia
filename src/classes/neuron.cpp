@@ -289,7 +289,7 @@ int Neuron::get_num_inputs()
     return i;
 }
 
-const Connection* Neuron::get_input(int i)
+Connection* Neuron::get_input(int i)
 {
     if (!inputs) return 0;
     return &(inputs[i]);

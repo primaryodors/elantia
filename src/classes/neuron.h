@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <string>
+#include <vector>
 #include "../constants.h"
 #include "../activation.h"
 
@@ -43,7 +44,7 @@ class Neuron
 
     // Getters
     int get_num_inputs();
-    const Connection* get_input(int index);
+    Connection* get_input(int index);
 
     // Serialization
     void write(FILE* pfile);

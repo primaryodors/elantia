@@ -120,9 +120,92 @@ void NeuralNetwork::write(FILE* fp)
     fwrite(&n, sizeof(int), 1, fp);
 }
 
-void NeuralNetwork::read(FILE* fp)
+NeuralNetwork* NeuralNetwork::read(FILE* fp)
 {
-    // TODO:
+    if (!fp) throw 0xbadf11e;
+    NeuralNetwork* result = new NeuralNetwork(0, 0, 0, nullptr);
+    
+    std::vector<Neuron*> all_neurons;
+
+    // Input layer
+    int n;
+    Neuron* neu;
+    fread(&n, sizeof(int), 1, fp);
+    result->inputs = new Layer(n, Identity);
+    int i;
+    for (i=0; i<n; i++)
+    {
+        neu = result->inputs->get_neuron(i);
+        neu->read(fp);
+        all_neurons.push_back(neu);
+    }
+
+    // Inner layers
+    int m;
+    fread(&m, sizeof(int), 1, fp);
+    result->inner_layers = new Layer*[m+2];
+    int j;
+    for (j=0; j<m; j++)
+    {
+        fread(&n, sizeof(int), 1, fp);
+
+        Layer* layer = new Layer(n, Identity);
+        result->inner_layers[j] = layer;
+
+        for (i=0; i<n; i++)
+        {
+            neu = result->inner_layers[j]->get_neuron(i);
+            all_neurons.push_back(neu);
+            neu->read(fp);
+        }
+    }
+
+    // Output layer
+    int n;
+    Neuron* neu;
+    fread(&n, sizeof(int), 1, fp);
+    result->outputs = new Layer(n, Identity);
+    int i;
+    for (i=0; i<n; i++)
+    {
+        neu = result->outputs->get_neuron(i);
+        neu->read(fp);
+        all_neurons.push_back(neu);
+    }
+
+    // Connections
+    n = all_neurons.size();
+    while (!feof(fp))
+    {
+        int s;
+        char buffer[256];
+        fread (&s, sizeof(int), 1, fp);
+        if (s == eof_magic) break;
+
+        fread(buffer, sizeof(char), s, fp);
+        buffer[s] = 0;
+
+        for (i=0; i<n; i++) if (all_neurons[i]->name == (std::string)buffer) break;
+        if (i >= n) throw 0xbadda7a;
+
+        float f;
+        fread(&f, sizeof(float), 1, fp);
+
+        fread (&s, sizeof(int), 1, fp);
+        fread(buffer, sizeof(char), s, fp);
+        buffer[s] = 0;
+
+        for (j=0; j<n; j++) if (all_neurons[j]->name == (std::string)buffer) break;
+        if (j >= n) throw 0xbadda7a;
+
+        s = all_neurons[i]->get_num_inputs();
+        int k;
+        for (k=0; k<s; k++) if (all_neurons[i]->get_input(k)->output_from->name == (std::string)buffer) break;
+        if (k >= s) all_neurons[i]->attach_input(all_neurons[j]);
+        all_neurons[i]->get_input(k)->multiplier = f;
+    }
+
+    return result;
 }
 
 void NeuralNetwork::name_neurons()
