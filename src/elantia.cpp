@@ -122,7 +122,7 @@ int main (int argc, char** argv)
         }
 
         k = train_outs.size();
-        
+
         #if false
         // Debug step
         for (i=0; i<k; i++)
@@ -154,6 +154,22 @@ int main (int argc, char** argv)
         if (!fp) return -2;
         neur->write(fp);
         fclose(fp);
+    }
+    else if (!strcmp(argv[1], "predict"))
+    {
+        if (argc < 4) return -1;
+
+        FILE* fp = fopen(argv[2], "rb");
+        if (!fp) return -2;
+        NeuralNetwork* neur = NeuralNetwork::read(fp);
+        fclose(fp);
+
+        float input_vals[argc];
+        for (i=3; i<argc; i++) input_vals[i-3] = atof(argv[i]);
+
+        int result = neur->predict(input_vals);
+
+        cout << result << endl;
     }
 
     return 0;
