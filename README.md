@@ -4,7 +4,7 @@
 Fast, lightweight neural net for ML/AI.
 Named for the word for "doe" in Gaulish. A doe is fast and lightweight, like this application.
 
-This software is a work in progress, however it does allow creating and training a neural net and making predictions.
+This software does not yet have many features, but it works and can create and train neural networks and perform classification predictions.
 
 # Example Usage
 Example usage (after checking out the code and running `make`):
