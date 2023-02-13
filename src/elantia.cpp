@@ -38,6 +38,11 @@ int main (int argc, char** argv)
                 i++;
                 layers = atoi(argv[i]);
             }
+            else if (!strcmp("--neurons", argv[i]))
+            {
+                i++;
+                neurons = atoi(argv[i]);
+            }
             else if (!strcmp("--function", argv[i]))
             {
                 i++;
