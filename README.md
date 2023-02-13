@@ -4,7 +4,7 @@
 Fast, lightweight neural net for ML/AI.
 Named for the word for "doe" in Gaulish. A doe is fast and lightweight, like this application.
 
-This software is a work in progress, however it does allow creating and training a neural net and making predictions.
+This software does not yet have many features, but it works and can create and train neural networks and perform classification predictions.
 
 # Example Usage
 Example usage (after checking out the code and running `make`):
@@ -42,7 +42,7 @@ To make a prediction, you can then run:
 
 This should give an output of 1 with a confidence percentage.
 
-Note: for both predictions and for training, input values should *never* exceed the range of -1.0 to 1.0.
+Note: for both predictions and training, input values should *never* exceed the range of -0.5 to 1.0.
 
 # Color Recognition
 You can see the elantia ML engine in action using the color identification test, located at `tests/color_recognition`.
