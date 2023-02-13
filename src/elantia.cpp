@@ -146,7 +146,7 @@ int main (int argc, char** argv)
 
         for (i=0; i<iters; i++)
         {
-            cout << "Training iteration " << i << "...                      " << endl << "\x1b[A";
+            cout << "Training iteration " << i << "...                      " << endl << "\x1b[A" << flush;
             for (j=0; j<k; j++)
             {
                 neur->train(train_ins[j], train_outs[j]);
