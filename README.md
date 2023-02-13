@@ -42,7 +42,7 @@ To make a prediction, you can then run:
 
 This should give an output of 1 with a confidence percentage.
 
-Note: for both predictions and for training, input values should *never* exceed the range of -1.0 to 1.0.
+Note: for both predictions and training, input values should *never* exceed the range of -1.0 to 1.0.
 
 # Color Recognition
 You can see the elantia ML engine in action using the color identification test, located at `tests/color_recognition`.
