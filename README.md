@@ -1,9 +1,12 @@
 # elantia
+
+# About
 Fast, lightweight neural net for ML/AI.
 Named for the word for "doe" in Gaulish. A doe is fast and lightweight, like this application.
 
 This software is a work in progress, however it does allow creating and training a neural net and making predictions.
 
+# Example Usage
 Example usage (after checking out the code and running `make`):
 
 `bin/elantia create my_neural_net.ai --inputs 3 --outputs 2 --layers 2 --neurons 50 --function SELU`
@@ -38,3 +41,21 @@ To make a prediction, you can then run:
 `bin/elantia predict my_neural_net 0.2 0.5 0.9`
 
 This should give an output of 1 with a confidence percentage.
+
+# Color Recognition
+You can see the elantia ML engine in action using the color identification test, located at `tests/color_recognition`.
+When run, this test will create a neural net, train it to seven saturated colors (red, orange, yellow, green, blue, violet, magenta),
+and then have it categorize several randomly generated colors. The neural net will be saved as `color_test.ai` for reuse.
+This file contains all that's necessary to identify your own categories among the seven options, for example:
+
+`bin/elantia predict color_test.ai 0.2 0.5 0.3`
+
+...which will most likely output 3, meaning green (the output values are a zero-based index).
+You can also train it on the provided color training data, or your own data, substituting the .txt filename below if necessary:
+
+`bin/elantia train color_test.ai tests/color_training_data.txt --iter 1000000`
+
+
+
+
+
