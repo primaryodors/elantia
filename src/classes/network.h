@@ -12,6 +12,7 @@ class NeuralNetwork
 
     float confidence = 0;
 
+    NeuralNetwork() {;}
     void name_neurons();
 
     public:
@@ -19,13 +20,17 @@ class NeuralNetwork
     NeuralNetwork(int inputs, int outputs, int layers, Layer* layer_array);
     NeuralNetwork(int inputs, int outputs, int layers, Layer* layer_array, ActivationFunction input_acv_fn, ActivationFunction output_acv_fn);
     NeuralNetwork(int inputs, int outputs, int layers, int layer_neurons, ActivationFunction activation);
+    ~NeuralNetwork();
+
+    // Evolution
+    static NeuralNetwork* recombine(const NeuralNetwork* matir, const NeuralNetwork* atir);
 
     // Serialization
     void write(FILE* pfile);
     static NeuralNetwork* read(FILE* pfile);
 
     // Layer ftns
-    int get_num_layers();
+    int get_num_layers() const;
     Layer* get_layer(int index);
     Layer* get_input_layer();
     Layer* get_output_layer();

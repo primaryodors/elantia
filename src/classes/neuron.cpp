@@ -69,6 +69,38 @@ Neuron::Neuron (ActivationFunction af)
     }
 }
 
+Neuron::~Neuron()
+{
+    if (inputs) delete inputs;
+}
+
+Neuron* Neuron::recombine(const Neuron* matir, const Neuron* atir)
+{
+    Neuron* result = new Neuron();
+    const Neuron* parent = (rand() & 1) ? matir : atir;
+    result->activation_function = parent->activation_function;
+    result->acv_fn = parent->acv_fn;
+
+    float f = frand(0,1);
+    float f1 = 1.0 - f;
+    result->alpha = f * matir->alpha + f1 * atir->alpha;
+
+    f = frand(0,1);
+    f1 = 1.0 - f;
+    result->color.red   = f * matir->color.red   + f1 * atir->color.red;
+    result->color.green = f * matir->color.green + f1 * atir->color.green;
+    result->color.blue  = f * matir->color.blue  + f1 * atir->color.blue;
+
+    result->dalpha  = frand(-0.1, 0.1);
+    result->dlambda = frand(-0.1, 0.1);
+
+    f = frand(0,1);
+    f1 = 1.0 - f;
+    result->lambda = f * matir->lambda + f1 * atir->lambda;
+
+    return result;
+}
+
 void Neuron::write(FILE* fp)
 {
     fwrite(&version, sizeof(int), 1, fp);
@@ -154,7 +186,7 @@ Connection* Neuron::attach_input(Neuron* n)
         {
             Connection* temp = new Connection[i+10];
             for (j=0; j<i; j++) temp[j] = inputs[j];
-            delete[] inputs;
+            delete inputs;
             inputs = temp;
         }
     }

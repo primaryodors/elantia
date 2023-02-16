@@ -35,12 +35,16 @@ class Neuron
 
     void equalize_inputs();
 
+    Neuron() {;}
+
     public:
     // Constructor and Initialization
-    Neuron (ActivationFunction acv_function);
+    Neuron(ActivationFunction acv_function);
+    ~Neuron();
     Connection* attach_input(Neuron* n);
     std::string name;
     Color color;
+    static Neuron* recombine(const Neuron* matir, const Neuron* atir);
 
     // Getters
     int get_num_inputs();

@@ -51,6 +51,62 @@ NeuralNetwork::NeuralNetwork(int i, int o, int l, int ln, ActivationFunction af)
     outputs->connect_layer(inner_layers[l-1], 1);
 }
 
+NeuralNetwork::~NeuralNetwork()
+{
+    if (inputs) delete inputs;
+    if (outputs) delete outputs;
+    if (inner_layers) delete[] inner_layers;
+}
+
+NeuralNetwork* NeuralNetwork::recombine(const NeuralNetwork* matir, const NeuralNetwork* atir)
+{
+    int n = matir->get_num_layers();
+    if (n != atir->get_num_layers()) throw 0xbadb019c;
+    NeuralNetwork* result = new NeuralNetwork();
+
+    result->inputs = Layer::recombine(matir->inputs, atir->outputs);
+    result->outputs = Layer::recombine(matir->outputs, atir->outputs);
+
+    result->inner_layers = new Layer*[n+2];
+    int i;
+    for (i=0; i<n; i++) result->inner_layers[i] = Layer::recombine(matir->inner_layers[i], atir->inner_layers[i]);
+    result->inner_layers[n] = nullptr;
+
+    result->name_neurons();
+
+    int j, k, l, m;
+    for (i=0; i<=n; i++)
+    {
+        Layer* mcurr = (i==n) ? matir->outputs  : matir->inner_layers[i];
+        Layer* acurr = (i==n) ? atir->outputs   : atir->inner_layers[i];
+        Layer* rcurr = (i==n) ? result->outputs : result->inner_layers[i];
+        m = mcurr->count_neurons();
+        Layer* mprev = i ? matir->inner_layers[i-1]  : matir->inputs;
+        Layer* aprev = i ? atir->inner_layers[i-1]   : atir->inputs;
+        Layer* rprev = i ? result->inner_layers[i-1] : result->inputs;
+
+        for (j=0; j<m; j++)
+        {
+            k = mcurr->get_neuron(j)->get_num_inputs();
+            for (l=0; l<k; l++)
+            {
+                Connection* mconn = mcurr->get_neuron(j)->get_input(l);
+                Connection* aconn = acurr->get_neuron(j)->get_input(l);
+
+                Neuron* neu = rprev->get_neuron(mconn->output_from->name.c_str());
+                if (!neu) throw 0xbadb019c;
+
+                Connection* c = rcurr->get_neuron(l)->attach_input(neu);
+
+                float f = frand(0,1), f1 = 1.0 - f;
+                c->multiplier = f * mconn->multiplier + f1 * aconn->multiplier;
+            }
+        }
+    }
+
+    return result;
+}
+
 void NeuralNetwork::write(FILE* fp)
 {
     std::vector<Neuron*> all_neurons;
@@ -323,7 +379,7 @@ int NeuralNetwork::predict(float* iv)
         Neuron* n = outputs->get_neuron(i);
         float f = n->compute_firing_rate();
         // cout << f << " ";
-        if (f > greatest)
+        if (!i || f > greatest)
         {
             greatest = f;
             result = i;
@@ -338,7 +394,7 @@ int NeuralNetwork::predict(float* iv)
     return result;
 }
 
-int NeuralNetwork::get_num_layers()
+int NeuralNetwork::get_num_layers() const
 {
     if (!inner_layers) return 0;
     int i;

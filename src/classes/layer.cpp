@@ -2,6 +2,7 @@
 #include "layer.h"
 #include <math.h>
 #include <iostream>
+#include <string.h>
 
 using namespace std;
 
@@ -12,6 +13,22 @@ Layer::Layer(int n, ActivationFunction af)
     int i;
     for (i=0; i<n; i++) neurons[i] = new Neuron(af);
     neurons[n] = nullptr;
+}
+
+Layer::~Layer()
+{
+    if (neurons) delete[] neurons;
+}
+
+Layer* Layer::recombine(const Layer* matir, const Layer* atir)
+{
+    if (matir->num_neurons != atir->num_neurons) throw 0xbadb019c;
+    Layer* result = new Layer();
+    result->num_neurons = matir->num_neurons;
+    result->neurons = new Neuron*[result->num_neurons+2];
+    int i;
+    for (i=0; i<result->num_neurons; i++) result->neurons[i] = Neuron::recombine(matir->neurons[i], atir->neurons[i]);
+    return result;
 }
 
 void Layer::connect_layer(Layer* prev, float cd)
@@ -53,4 +70,16 @@ int Layer::count_neurons() const
 Neuron* Layer::get_neuron(int index) const
 {
     return neurons[index];
+}
+
+Neuron* Layer::get_neuron(const char* name) const
+{
+    if (!neurons) return nullptr;
+    int i;
+    for (i=0; neurons[i]; i++)
+    {
+        if (!strcmp(name, neurons[i]->name.c_str())) return neurons[i];
+    }
+
+    return nullptr;
 }
