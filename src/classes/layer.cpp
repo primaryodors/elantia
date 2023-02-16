@@ -31,6 +31,16 @@ Layer* Layer::recombine(const Layer* matir, const Layer* atir)
     return result;
 }
 
+void Layer::mutate()
+{
+    if (!neurons) return;
+    int i;
+    for (i=0; i<num_neurons; i++)
+    {
+        neurons[i]->mutate();
+    }
+}
+
 void Layer::connect_layer(Layer* prev, float cd)
 {
     if (cd < 0 || cd > 1) throw 0xbadcd;

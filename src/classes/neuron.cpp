@@ -101,6 +101,17 @@ Neuron* Neuron::recombine(const Neuron* matir, const Neuron* atir)
     return result;
 }
 
+void Neuron::mutate()
+{
+    if (!inputs) return;
+    int i;
+    for (i=0; inputs[i].input_to == this; i++)
+    {
+        float f = frand(0.01, 0.5);
+        inputs[i].multiplier += frand(-f, f);
+    }
+}
+
 void Neuron::write(FILE* fp)
 {
     fwrite(&version, sizeof(int), 1, fp);

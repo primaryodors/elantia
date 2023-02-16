@@ -20,6 +20,7 @@ class Layer
     Neuron* get_neuron(int index) const;
     Neuron* get_neuron(const char* name) const;
     static Layer* recombine(const Layer* matir, const Layer* atir);
+    void mutate();
 };
 
 

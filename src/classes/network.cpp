@@ -64,7 +64,7 @@ NeuralNetwork* NeuralNetwork::recombine(const NeuralNetwork* matir, const Neural
     if (n != atir->get_num_layers()) throw 0xbadb019c;
     NeuralNetwork* result = new NeuralNetwork();
 
-    result->inputs = Layer::recombine(matir->inputs, atir->outputs);
+    result->inputs = Layer::recombine(matir->inputs, atir->inputs);
     result->outputs = Layer::recombine(matir->outputs, atir->outputs);
 
     result->inner_layers = new Layer*[n+2];
@@ -96,7 +96,7 @@ NeuralNetwork* NeuralNetwork::recombine(const NeuralNetwork* matir, const Neural
                 Neuron* neu = rprev->get_neuron(mconn->output_from->name.c_str());
                 if (!neu) throw 0xbadb019c;
 
-                Connection* c = rcurr->get_neuron(l)->attach_input(neu);
+                Connection* c = rcurr->get_neuron(j)->attach_input(neu);
 
                 float f = frand(0,1), f1 = 1.0 - f;
                 c->multiplier = f * mconn->multiplier + f1 * aconn->multiplier;
@@ -105,6 +105,18 @@ NeuralNetwork* NeuralNetwork::recombine(const NeuralNetwork* matir, const Neural
     }
 
     return result;
+}
+
+void NeuralNetwork::mutate()
+{
+    if (!inputs || !outputs || !inner_layers) return;
+    int i;
+    for (i=0; inner_layers[i]; i++)
+    {
+        inner_layers[i]->mutate();
+    }
+
+    outputs->mutate();
 }
 
 void NeuralNetwork::write(FILE* fp)

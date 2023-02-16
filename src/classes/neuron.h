@@ -44,7 +44,6 @@ class Neuron
     Connection* attach_input(Neuron* n);
     std::string name;
     Color color;
-    static Neuron* recombine(const Neuron* matir, const Neuron* atir);
 
     // Getters
     int get_num_inputs();
@@ -63,6 +62,10 @@ class Neuron
     void put_it_back();
     void fire_together_wire_together();             // Strengthen positive inputs.
     void forget();                                  // Weaken positive inputs.
+
+    // Evolution
+    static Neuron* recombine(const Neuron* matir, const Neuron* atir);
+    void mutate();
 };
 
 struct Connection

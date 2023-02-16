@@ -24,6 +24,7 @@ class NeuralNetwork
 
     // Evolution
     static NeuralNetwork* recombine(const NeuralNetwork* matir, const NeuralNetwork* atir);
+    void mutate();
 
     // Serialization
     void write(FILE* pfile);
