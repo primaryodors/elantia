@@ -305,6 +305,13 @@ int main (int argc, char** argv)
 
             if (bestn < 0 || secn < 0) throw 0xbadc0de;
 
+            // Each generation, save the best performing offspring.
+            neur = population[bestn];
+            fp = fopen(argv[2], "wb");
+            if (!fp) return -2;
+            neur->write(fp);
+            fclose(fp);
+
             // Breed the two best results to get the next generation.
             // Repeat from the train and evaluate step until number of generations.
             if (g == gener) break;
@@ -323,16 +330,9 @@ int main (int argc, char** argv)
             }
         }
 
-        // Save the best performing offspring.
-        neur = population[bestn];
-        fp = fopen(argv[2], "wb");
-        if (!fp) return -2;
-        neur->write(fp);
-        fclose(fp);
-
         n = eval_outs.size();
         float percent = 0.01 * round((float)mostright / n * 10000);
-        cout << endl << "Best result: " << percent << "\% correct." << endl;
+        cout << endl << "Best result: " << percent << "\% correct." << endl << endl;
     }
     else if (!strcmp(argv[1], "predict"))
     {
