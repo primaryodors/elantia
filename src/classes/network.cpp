@@ -410,7 +410,7 @@ int NeuralNetwork::get_num_layers() const
 {
     if (!inner_layers) return 0;
     int i;
-    for (i=0; inner_layers[i]; i++); // get count.
+    for (i=0; inner_layers[i] && inner_layers[i]->count_neurons(); i++); // get count.
     return i;
 }
 

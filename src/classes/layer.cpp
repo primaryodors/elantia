@@ -77,16 +77,17 @@ int Layer::count_neurons() const
     return num_neurons;
 }
 
-Neuron* Layer::get_neuron(int index) const
+Neuron* Layer::get_neuron(int i) const
 {
-    return neurons[index];
+    if (i<0 || i>num_neurons) return nullptr;
+    return neurons[i];
 }
 
 Neuron* Layer::get_neuron(const char* name) const
 {
     if (!neurons) return nullptr;
     int i;
-    for (i=0; neurons[i]; i++)
+    for (i=0; i<num_neurons; i++)
     {
         if (!strcmp(name, neurons[i]->name.c_str())) return neurons[i];
     }
