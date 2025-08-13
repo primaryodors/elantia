@@ -16,7 +16,7 @@ The neural net will be saved to a file named `my_neural_net.ai` for later reuse.
 
 To train the net, use a command like the following:
 
-`bin/elantia train my_neural_net training_set.txt --iter 10000`
+`bin/elantia train my_neural_net.ai training_set.txt --iter 10000`
 
 The `--iter` parameter specifies how many training iterations.
 The training data file should be in a format similar to:
@@ -38,7 +38,7 @@ The above data will train the neural net to identify rising number sequences as 
 
 To make a prediction, you can then run:
 
-`bin/elantia predict my_neural_net 0.2 0.5 0.9`
+`bin/elantia predict my_neural_net.ai 0.2 0.5 0.9`
 
 This should give an output of 1 with a confidence percentage.
 
