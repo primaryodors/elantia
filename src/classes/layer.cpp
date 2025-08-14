@@ -58,6 +58,7 @@ void Layer::connect_layer(Layer* prev, float cd)
                 neurons[i]->attach_input(prev->neurons[j]);
             }
         }
+        // cout << "A neuron has been attached to " << neurons[i]->get_num_inputs() << " other neurons with density " << cd << endl;
     }
 }
 

@@ -15,7 +15,10 @@ all: $(DIRS) \
 CC=g++
 
 # Default CFLAG - no code coverage
-CFLAGS=-g -Wwrite-strings -fextended-identifiers -std=c++14
+CFLAGS=-O3 -ffast-math -Wwrite-strings -fextended-identifiers -std=c++14
+
+# Debug CFLAGS - allows gdb, valgrind
+# CFLAGS=-g -ffast-math -Wwrite-strings -fextended-identifiers -std=c++14
 
 clean:
 	rm $(OBJDIR)/*.o *.gcov *.gcno *.gcda
@@ -29,25 +32,25 @@ $(BINDIR):
 $(TSTDIR):
 	if [ ! -f $(TSTDIR) ]; then mkdir -p $(TSTDIR); fi
 
-$(OBJDIR)/misc.o: src/constants.h src/misc.cpp
+$(OBJDIR)/misc.o: src/constants.h src/misc.cpp makefile
 	$(CC) -c src/misc.cpp -o $(OBJDIR)/misc.o $(CFLAGS)
 
-$(OBJDIR)/activation.o: src/activation.h src/activation.cpp src/constants.h
+$(OBJDIR)/activation.o: src/activation.h src/activation.cpp src/constants.h makefile
 	$(CC) -c src/activation.cpp -o $(OBJDIR)/activation.o $(CFLAGS)
 
-$(OBJDIR)/neuron.o: src/classes/neuron.h src/classes/neuron.cpp $(OBJDIR)/activation.o src/constants.h
+$(OBJDIR)/neuron.o: src/classes/neuron.h src/classes/neuron.cpp $(OBJDIR)/activation.o src/constants.h makefile
 	$(CC) -c src/classes/neuron.cpp -o $(OBJDIR)/neuron.o $(CFLAGS)
 
-$(OBJDIR)/layer.o: src/classes/layer.h src/classes/layer.cpp $(OBJDIR)/neuron.o src/constants.h
+$(OBJDIR)/layer.o: src/classes/layer.h src/classes/layer.cpp $(OBJDIR)/neuron.o src/constants.h makefile
 	$(CC) -c src/classes/layer.cpp -o $(OBJDIR)/layer.o $(CFLAGS)
 
-$(OBJDIR)/network.o: src/classes/network.h src/classes/network.cpp $(OBJDIR)/layer.o src/constants.h
+$(OBJDIR)/network.o: src/classes/network.h src/classes/network.cpp $(OBJDIR)/layer.o src/constants.h makefile
 	$(CC) -c src/classes/network.cpp -o $(OBJDIR)/network.o $(CFLAGS)
 
-tests/color_recognition: src/tests/color_recognition.cpp $(OBJS)
+tests/color_recognition: src/tests/color_recognition.cpp $(OBJS) makefile
 	$(CC) src/tests/color_recognition.cpp $(OBJS) -o tests/color_recognition $(CFLAGS)
 
-$(BINDIR)/elantia: src/elantia.cpp $(OBJS)
+$(BINDIR)/elantia: src/elantia.cpp $(OBJS) makefile
 	$(CC) src/elantia.cpp $(OBJS) -o $(BINDIR)/elantia $(CFLAGS)
 
 

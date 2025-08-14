@@ -33,6 +33,8 @@ class Neuron
     int last_tweaked = 0;
     float last_tweaked_value = 0;
 
+    int dirty = 0;
+
     void equalize_inputs();
 
     Neuron() {;}
@@ -60,8 +62,8 @@ class Neuron
     // Learning
     void tweak_something();
     void put_it_back();
-    void fire_together_wire_together();             // Strengthen positive inputs.
-    void forget();                                  // Weaken positive inputs.
+    void fire_together_wire_together(int dirt = 0);     // Strengthen positive inputs.
+    void forget(int dirt = 0);                          // Weaken positive inputs.
 
     // Evolution
     static Neuron* recombine(const Neuron* matir, const Neuron* atir);

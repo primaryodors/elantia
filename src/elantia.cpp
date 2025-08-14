@@ -93,10 +93,10 @@ int main (int argc, char** argv)
         std::vector<int> train_outs;
         std::vector<std::vector<float>> train_ins;
 
-        char buffer[1024];
+        char buffer[1048576];
         while (!feof(fp))
         {
-            if (!fgets(buffer, 1020, fp)) break;
+            if (!fgets(buffer, 1048573, fp)) break;
             for (i=0; buffer[i]; i++) if (buffer[i] == ':') break;
             if (buffer[i])
             {

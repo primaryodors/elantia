@@ -20,6 +20,7 @@ NeuralNetwork::NeuralNetwork(int i, int o, int l, Layer* la, ActivationFunction 
     inner_layers = new Layer*[l+2];
     int j;
     for (j=0; j<l; j++) inner_layers[j] = &(la[j]);
+    inner_layers[l] = nullptr;
 
     name_neurons();
 
@@ -40,15 +41,18 @@ NeuralNetwork::NeuralNetwork(int i, int o, int l, int ln, ActivationFunction af)
     {
         inner_layers[j] = new Layer(ln, af);
     }
+    inner_layers[l] = nullptr;
 
     name_neurons();
+    float cd = fmin(1, 200.0/ln);
+    // cout << "Density: " << cd << endl;
     for (j=0; j<l; j++)
     {
-        if (j) inner_layers[j]->connect_layer(inner_layers[j-1], 0.75);
+        if (j) inner_layers[j]->connect_layer(inner_layers[j-1], cd);
     }
 
-    inner_layers[0]->connect_layer(inputs, 1);
-    outputs->connect_layer(inner_layers[l-1], 1);
+    inner_layers[0]->connect_layer(inputs, cd);
+    outputs->connect_layer(inner_layers[l-1], cd);
 }
 
 NeuralNetwork::~NeuralNetwork()
@@ -227,6 +231,7 @@ NeuralNetwork* NeuralNetwork::read(FILE* fp)
             neu->read(fp);
         }
     }
+    result->inner_layers[m] = nullptr;
 
     // Output layer
     fread(&n, sizeof(int), 1, fp);

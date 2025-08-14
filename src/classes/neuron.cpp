@@ -295,33 +295,39 @@ void Neuron::equalize_inputs()
     }
 }
 
-void Neuron::fire_together_wire_together()
+void Neuron::fire_together_wire_together(int d)
 {
     if (!inputs) return;
+    if (!d) d = rand();
+    if (dirty == d) return;
 
     int i;
     for (i=0; inputs[i].input_to == this; i++)
     {
         if (rate < rate_cutoff) inputs[i].multiplier += inputs[i].output_from->rate;
-        if (inputs[i].output_from->rate >= rate_cutoff) inputs[i].output_from->fire_together_wire_together();
+        if (inputs[i].output_from->rate >= rate_cutoff) inputs[i].output_from->fire_together_wire_together(d);
     }
 
     equalize_inputs();
+    dirty = d;
 }
 
-void Neuron::forget()
+void Neuron::forget(int d)
 {
     return;
     if (!inputs) return;
+    if (!d) d = rand();
+    if (dirty == d) return;
 
     int i;
     for (i=0; inputs[i].input_to == this; i++)
     {
         if (rate > rate_cutoff) inputs[i].multiplier -= inputs[i].output_from->rate;
-        if (inputs[i].output_from->rate < rate_cutoff) inputs[i].output_from->forget();
+        if (inputs[i].output_from->rate < rate_cutoff) inputs[i].output_from->forget(d);
     }
 
     equalize_inputs();
+    dirty = d;
 }
 
 int Neuron::get_num_inputs()

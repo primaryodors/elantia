@@ -91,6 +91,7 @@ chdir(__DIR__);
 chdir("..");
 if (!file_exists("images")) mkdir("images");
 
+$imgsz = 20;
 $imgdata = [];
 $catid = 0;
 foreach ($urls as $category => $list)
@@ -115,13 +116,13 @@ foreach ($urls as $category => $list)
         $w = imagesx($im);
         $h = imagesy($im);
 
-        $out = imagecreatetruecolor(32, 32);
-        imagecopyresampled($out, $im, 0, 0, 0, 0, 32, 32, $w, $h);
+        $out = imagecreatetruecolor($imgsz, $imgsz);
+        imagecopyresampled($out, $im, 0, 0, 0, 0, $imgsz, $imgsz, $w, $h);
 
         $pixarray = [];
-        for ($y=0; $y<32; $y++)
+        for ($y=0; $y<$imgsz; $y++)
         {
-            for ($x=0; $x<32; $x++)
+            for ($x=0; $x<$imgsz; $x++)
             {
                 $c = imagecolorat($out, $x, $y);
                 $pixarray[] = 0.00392 * (($c >> 16) & 0xFF);        // red
@@ -146,13 +147,20 @@ $fn = "tests/img_train_data.txt";
 file_put_contents($fn, implode("\n", $train));
 if (file_exists($fn)) echo "Wrote $fn.\n";
 
-$inputs = 32*32*3;
+$inputs = $imgsz*$imgsz*3;
 $outputs = count(array_keys($urls));
-$cmd = "bin/elantia create img_recognition.ai --inputs $inputs --outputs $outputs --layers 3 --neurons 100 --function SELU";
+$cmd = "bin/elantia create img_recognition.ai --inputs $inputs --outputs $outputs --layers 5 --neurons 1000 --function SELU";
 echo "$cmd\n";
 passthru($cmd);
 
-$cmd = "bin/elantia train img_recognition tests/img_train_data.txt --iter 100000";
+$cmd = "bin/elantia train img_recognition.ai tests/img_train_data.txt --iter 1000000";
 echo "$cmd\n";
 passthru($cmd);
 
+$lno = rand(0, count($imgdata));
+$test = explode(":",$imgdata[$lno]);
+$expect = $test[0];
+$test = $test[1];
+$cmd = "bin/elantia predict img_recognition.ai $test";
+echo "Testing image with expected output $expect...\n";
+passthru($cmd);
