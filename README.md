@@ -1,10 +1,10 @@
 # elantia
 
 # About
-Fast, lightweight neural net for ML/AI.
-Named for the word for "doe" in Gaulish. A doe is fast and lightweight, like this application.
+Slow, non-scalable neural net for ML/AI.
+Named for the word for "doe" in Gaulish. A doe is fast and lightweight, unlike this application.
 
-This software does not yet have many features, but it works and can create and train neural networks and perform classification predictions.
+This software does not yet have many features, but it sometimes works and can create and train neural networks and perform classification predictions.
 
 # Example Usage
 Example usage (after checking out the code and running `make`):
