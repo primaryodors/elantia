@@ -44,7 +44,7 @@ NeuralNetwork::NeuralNetwork(int i, int o, int l, int ln, ActivationFunction af)
     inner_layers[l] = nullptr;
 
     name_neurons();
-    float cd = fmin(1, 200.0/ln);
+    float cd = 1; // fmin(1, 200.0/ln);
     // cout << "Density: " << cd << endl;
     for (j=0; j<l; j++)
     {

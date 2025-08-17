@@ -71,7 +71,7 @@ if (file_exists($fn)) echo "Wrote $fn.\n";
 
 $inputs = $imgsz*$imgsz*3;
 $outputs = count(array_keys($urls));
-$cmd = "bin/elantia create img_recognition.ai --inputs $inputs --outputs $outputs --layers 5 --neurons 1000 --function SELU";
+$cmd = "bin/elantia create img_recognition.ai --inputs $inputs --outputs $outputs --layers 8 --neurons 1000 --function SELU";
 echo "$cmd\n";
 passthru($cmd);
 
